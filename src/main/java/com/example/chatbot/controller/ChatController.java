@@ -1,5 +1,7 @@
 package com.example.chatbot.controller;
 
+import com.example.chatbot.dto.ChatRequestDto;
+import com.example.chatbot.dto.ChatResponseDto;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +17,13 @@ public class ChatController {
     }
 
     @PostMapping("/chat")
-    public ResponseEntity<String> response(@RequestBody String message){
-        String response = chatClient.prompt()
-                .user(message)
-                .call()
-                .content();
+    public ResponseEntity<ChatResponseDto> response(@RequestBody ChatRequestDto request){
+        ChatResponseDto response = new ChatResponseDto(
+                chatClient.prompt()
+                        .user(request.message())
+                        .call()
+                        .content()
+        );
 
         return ResponseEntity.ok(response);
     }
